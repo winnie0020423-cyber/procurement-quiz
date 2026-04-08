@@ -9,21 +9,23 @@
         h1, h2 { color: #2c3e50; text-align: center; }
         .card { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 20px; }
         .chapter-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin-bottom: 20px; }
-        
-        /* 新增：題數設定區塊的樣式 */
         .settings-block { display: flex; justify-content: space-around; background: #e8f4f8; padding: 15px; border-radius: 8px; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;}
         .settings-block label { font-weight: bold; display: flex; align-items: center; }
         .settings-block input { width: 70px; padding: 5px; font-size: 16px; margin-left: 10px; border: 1px solid #ccc; border-radius: 4px; text-align: center;}
-        
         button { background-color: #3498db; color: white; border: none; padding: 12px 20px; font-size: 18px; border-radius: 5px; cursor: pointer; display: block; width: 100%; font-weight: bold; }
         button:hover { background-color: #2980b9; }
         .question-block { margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #eee; }
         .question-title { font-weight: bold; margin-bottom: 10px; font-size: 1.1em;}
         .options label { display: block; margin-bottom: 8px; cursor: pointer; padding: 8px; border-radius: 4px; background: #fafafa; border: 1px solid #eee; }
         .options label:hover { background-color: #f0f8ff; border-color: #3498db; }
-        .correct-answer { color: #d35400; font-weight: bold; margin-top: 10px; display: none; padding: 10px; background: #fdf3e7; border-radius: 4px; border-left: 4px solid #d35400;}
+        .correct-answer { color: #d35400; font-weight: bold; margin-top: 10px; display: none; padding: 15px; background: #fdf3e7; border-radius: 4px; border-left: 4px solid #d35400;}
         .wrong-bg { background-color: #ffeaa7 !important; border-color: #fdcb6e !important;}
         .correct-bg { background-color: #55efc4 !important; border-color: #00b894 !important;}
+        
+        /* AI 按鈕專屬樣式 */
+        .ai-btn { background-color: #9b59b6; margin-top: 10px; padding: 8px 15px; font-size: 15px; width: auto; display: inline-block; border-radius: 20px;}
+        .ai-btn:hover { background-color: #8e44ad; }
+        
         #quiz-container, #result-container { display: none; }
     </style>
 </head>
@@ -53,10 +55,9 @@
     <div id="result-container" class="card">
         <h2>測驗結果</h2>
         <h3 id="score-display" style="text-align: center; color: #e74c3c; font-size: 1.5em;"></h3>
-        <button onclick="location.reload()">🔄 重新測驗</button>
+        <button onclick="location.reload()" style="margin-bottom: 20px;">🔄 重新測驗</button>
     </div>
-
-    <script>
+<script>
 const quizData = {
     "工程及技術服務採購作業": {
         "mcq": [
@@ -23616,13 +23617,11 @@ const quizData = {
         ]
     }
 };
-        let currentQuestions = [];
+            let currentQuestions = [];
 
-        // 初始化：載入章節選項
         window.onload = function() {
-            // 如果還沒貼上題庫，顯示提醒
             if (typeof quizData === 'undefined') {
-                document.getElementById('chapter-checkboxes').innerHTML = '<p style="color:red; font-weight:bold;">⚠️ 請先將 data.js 的內容貼入 HTML 檔案中的指定位置！</p>';
+                document.getElementById('chapter-checkboxes').innerHTML = '<p style="color:red; font-weight:bold;">⚠️ 請先將 data.js 的內容貼入 HTML 檔案中！</p>';
                 return;
             }
 
@@ -23634,13 +23633,11 @@ const quizData = {
             }
         };
 
-        // 隨機抽題函數
         function getRandomItems(arr, count) {
             let shuffled = [...arr].sort(() => 0.5 - Math.random());
             return shuffled.slice(0, count);
         }
 
-        // 開始測驗
         function startQuiz() {
             if (typeof quizData === 'undefined') {
                 alert("請先將題庫資料貼入程式碼中！");
@@ -23655,7 +23652,6 @@ const quizData = {
                 return;
             }
 
-            // 讀取使用者設定的題數
             let numMCQ = parseInt(document.getElementById('mcq-count').value) || 0;
             let numTF = parseInt(document.getElementById('tf-count').value) || 0;
 
@@ -23674,21 +23670,12 @@ const quizData = {
                 }
             });
 
-            // 防呆機制：如果要求的題數超過題庫總數
-            if (numMCQ > poolMCQ.length) {
-                alert(`您選的章節中只有 ${poolMCQ.length} 題選擇題，將為您全數抽出！`);
-                numMCQ = poolMCQ.length;
-            }
-            if (numTF > poolTF.length) {
-                alert(`您選的章節中只有 ${poolTF.length} 題是非題，將為您全數抽出！`);
-                numTF = poolTF.length;
-            }
+            if (numMCQ > poolMCQ.length) { numMCQ = poolMCQ.length; }
+            if (numTF > poolTF.length) { numTF = poolTF.length; }
 
-            // 抽取題目
             let selectedMCQ = getRandomItems(poolMCQ, numMCQ).map(q => ({...q, type: 'mcq'}));
             let selectedTF = getRandomItems(poolTF, numTF).map(q => ({...q, type: 'tf'}));
             
-            // 打亂全部題目順序 (選擇跟是非混合)
             currentQuestions = [...selectedMCQ, ...selectedTF].sort(() => 0.5 - Math.random());
 
             if (currentQuestions.length === 0) {
@@ -23702,7 +23689,6 @@ const quizData = {
             window.scrollTo(0, 0);
         }
 
-        // 渲染題目到畫面上
         function renderQuestions() {
             const area = document.getElementById('questions-area');
             area.innerHTML = '';
@@ -23721,14 +23707,17 @@ const quizData = {
                              <label><input type="radio" name="q${index}" value="X"> (X) 非</label>`;
                 }
 
+                // 加入 AI 解析按鈕
                 html += `</div>
-                         <div class="correct-answer" id="ans-${index}">正確答案：${q.answer}</div>
+                         <div class="correct-answer" id="ans-${index}">
+                            正確答案：${q.answer}<br>
+                            <button class="ai-btn" onclick="copyToAI(${index})">🤖 複製此題，呼叫 AI 解析</button>
+                         </div>
                          </div>`;
                 area.innerHTML += html;
             });
         }
 
-        // 提交答案與對答案
         function submitQuiz() {
             let correctCount = 0;
 
@@ -23738,7 +23727,6 @@ const quizData = {
                 let qBlock = document.getElementById(`q-block-${index}`);
                 
                 ansDiv.style.display = 'block';
-
                 let standardizedAns = q.answer.toUpperCase().replace('Ｘ', 'X');
 
                 if (selected) {
@@ -23749,10 +23737,9 @@ const quizData = {
                         qBlock.classList.add('wrong-bg');
                     }
                 } else {
-                    qBlock.classList.add('wrong-bg'); // 未作答視同錯誤
+                    qBlock.classList.add('wrong-bg');
                 }
                 
-                // 停用選項，防止改答案
                 document.querySelectorAll(`input[name="q${index}"]`).forEach(input => input.disabled = true);
             });
 
@@ -23760,10 +23747,25 @@ const quizData = {
             document.getElementById('result-container').style.display = 'block';
             document.getElementById('score-display').innerText = `您的得分：${correctCount} / ${currentQuestions.length} 題\n（正確率：${Math.round(correctCount/currentQuestions.length*100)}%）`;
             
-            // 將題目區塊搬移到結果區以便檢討
             document.getElementById('result-container').insertBefore(document.getElementById('questions-area'), document.getElementById('result-container').lastElementChild);
             window.scrollTo(0, 0);
         }
+
+        // 複製給 AI 的專屬咒語功能
+        function copyToAI(index) {
+            let q = currentQuestions[index];
+            let typeText = q.type === 'mcq' ? '選擇題' : '是非題';
+            let optionsText = q.type === 'mcq' ? q.options.map((o, i) => `(${i+1}) ${o}`).join("  ") : "(O) 是 / (X) 非";
+            
+            let prompt = `請幫我解析這題【政府採購法】${typeText}：\n\n題目：${q.question}\n選項：${optionsText}\n正確答案：${q.answer}\n\n請告訴我為什麼選這個答案，以及相關的法條依據。`;
+
+            // 嘗試複製到剪貼簿
+            navigator.clipboard.writeText(prompt).then(() => {
+                alert("✅ 已經為您複製好題目與答案！\n\n請直接切換到 AI 對話框，貼上並發送，我就會為您解答喔！");
+            }).catch(err => {
+                alert("複製失敗，可能是瀏覽器限制。請手動框選題目文字來問我喔！");
+            });
+        }
     </script>
 </body>
-</html>
+</html>        
