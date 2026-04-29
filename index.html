@@ -47,18 +47,18 @@
             <div class="preset-grid">
                 <div class="preset-card" onclick="startPreset('total')">
                     <h3>📚 1. 總論及法規課程</h3>
-                    <p>全生命週期(5題) / 總則招標決標(17題) / 罰則(3題)</p>
-                    <p><strong>共 15 選擇 + 10 是非</strong></p>
+                    <p>全生命週期 / 總則招標決標 / 履約驗收 / 罰則</p>
+                    <p><strong>共 46 選擇 + 23 是非</strong></p>
                 </div>
                 <div class="preset-card" onclick="startPreset('practical')">
                     <h3>🏗️ 2. 實務課程</h3>
-                    <p>技術服務 / 財物勞務 / 最有利標 / 電子實務 / 履約驗收</p>
-                    <p><strong>共 15 選擇 + 10 是非</strong></p>
+                    <p>技術服務 / 財物勞務 / 最有利標 / 電子實務 </p>
+                    <p><strong>共 48 選擇 + 24 是非</strong></p>
                 </div>
                 <div class="preset-card" onclick="startPreset('others')">
                     <h3>⚖️ 3. 其他課程</h3>
                     <p>錯誤態樣 / 文件製作 / 契約 / 底價分析 / 爭議處理 / 道德</p>
-                    <p><strong>共 10 選擇 + 10 是非</strong></p>
+                    <p><strong>共 38 選擇 + 19 是非</strong></p>
                 </div>
                 <div class="preset-card" style="border-color: #1877f2; background: #f0f7ff;" onclick="startPreset('full')">
                     <h3>🎓 全科目大會考</h3>
@@ -23653,24 +23653,24 @@ const quizData = {
 };
 const config = {
             'total': [
-                { name: '政府採購全生命週期概論', mcq: 3, tf: 2 },
-                { name: '政府採購法之總則、招標及決標', mcq: 10, tf: 7 },
-                { name: '政府採購法之罰則及附則', mcq: 2, tf: 1 }
+                { name: '政府採購全生命週期概論', mcq: 4, tf: 2 },
+                { name: '政府採購法之總則、招標及決標', mcq: 28, tf: 14},
+                { name: '政府採購法之履約管理及驗收', mcq: 4, tf: 2 },
+                { name: '政府採購法之罰則及附則', mcq: 10, tf: 5 }
             ],
             'practical': [
-                { name: '工程及技術服務採購作業', mcq: 3, tf: 2 },
-                { name: '財物及勞務採購作業', mcq: 3, tf: 2 },
-                { name: '最有利標及評選優勝廠商', mcq: 3, tf: 2 },
-                { name: '電子採購實務', mcq: 1, tf: 1 },
-                { name: '政府採購法之履約管理及驗收', mcq: 5, tf: 3 }
+                { name: '工程及技術服務採購作業', mcq: 12, tf: 6 },
+                { name: '財物及勞務採購作業', mcq: 12, tf: 6 },
+                { name: '最有利標及評選優勝廠商', mcq: 12, tf: 6 },
+                { name: '電子採購實務', mcq: 12, tf: 6 },
             ],
             'others': [
-                { name: '錯誤採購態樣', mcq: 1, tf: 1 },
-                { name: '投標須知及招標文件製作', mcq: 2, tf: 2 },
-                { name: '採購契約', mcq: 2, tf: 2 },
-                { name: '底價及價格分析', mcq: 2, tf: 2 },
-                { name: '政府採購法之爭議處理', mcq: 2, tf: 1 },
-                { name: '道德規範及違法處置', mcq: 1, tf: 2 }
+                { name: '錯誤採購態樣', mcq: 4, tf: 2 },
+                { name: '投標須知及招標文件製作', mcq: 8, tf: 4 },
+                { name: '採購契約', mcq: 8, tf: 4 },
+                { name: '底價及價格分析', mcq: 6, tf: 3 },
+                { name: '政府採購法之爭議處理', mcq: 8, tf: 4 },
+                { name: '道德規範及違法處置', mcq: 4, tf: 2 }
             ]
         };
 
