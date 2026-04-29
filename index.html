@@ -23787,11 +23787,20 @@ const config = {
             document.getElementById('result-container').insertBefore(document.getElementById('questions-area'), document.getElementById('result-container').lastElementChild);
             window.scrollTo(0,0);
         }
+        // 複製給 AI 的專屬咒語功能
+        function copyToAI(index) {
+            let q = currentQuestions[index];
+            let typeText = q.type === 'mcq' ? '選擇題' : '是非題';
+            let optionsText = q.type === 'mcq' ? q.options.map((o, i) => `(${i+1}) ${o}`).join("  ") : "(O) 是 / (X) 非";
+            
+            let prompt = `請幫我解析這題【政府採購法】${typeText}：\n\n題目：${q.question}\n選項：${optionsText}\n正確答案：${q.answer}\n\n請告訴我為什麼選這個答案，以及相關的法條依據。`;
 
-        function copyToAI(i) {
-            const q = currentQuestions[i];
-            const text = `請幫我解析採購法題目：\n題目：${q.question}\n答案：${q.answer}`;
-            navigator.clipboard.writeText(text).then(() => alert('已複製題目，請貼給 AI 解析！'));
+            // 嘗試複製到剪貼簿
+            navigator.clipboard.writeText(prompt).then(() => {
+                alert("✅ 已經為您複製好題目與答案！\n\n請直接切換到 AI 對話框，貼上並發送，我就會為您解答喔！");
+            }).catch(err => {
+                alert("複製失敗，可能是瀏覽器限制。請手動框選題目文字來問我喔！");
+            });
         }
     </script>
 </body>
