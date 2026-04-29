@@ -3,59 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>政府採購法 隨堂測驗系統</title>
+    <title>政府採購法 專業模擬考系統</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; max-width: 800px; margin: 0 auto; padding: 20px; background-color: #f4f7f6; color: #333; }
-        h1, h2 { color: #2c3e50; text-align: center; }
-        .card { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 20px; }
-        .chapter-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin-bottom: 20px; }
-        .settings-block { display: flex; justify-content: space-around; background: #e8f4f8; padding: 15px; border-radius: 8px; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;}
-        .settings-block label { font-weight: bold; display: flex; align-items: center; }
-        .settings-block input { width: 70px; padding: 5px; font-size: 16px; margin-left: 10px; border: 1px solid #ccc; border-radius: 4px; text-align: center;}
-        button { background-color: #3498db; color: white; border: none; padding: 12px 20px; font-size: 18px; border-radius: 5px; cursor: pointer; display: block; width: 100%; font-weight: bold; }
-        button:hover { background-color: #2980b9; }
-        .question-block { margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #eee; }
-        .question-title { font-weight: bold; margin-bottom: 10px; font-size: 1.1em;}
-        .options label { display: block; margin-bottom: 8px; cursor: pointer; padding: 8px; border-radius: 4px; background: #fafafa; border: 1px solid #eee; }
-        .options label:hover { background-color: #f0f8ff; border-color: #3498db; }
-        .correct-answer { color: #d35400; font-weight: bold; margin-top: 10px; display: none; padding: 15px; background: #fdf3e7; border-radius: 4px; border-left: 4px solid #d35400;}
-        .wrong-bg { background-color: #ffeaa7 !important; border-color: #fdcb6e !important;}
-        .correct-bg { background-color: #55efc4 !important; border-color: #00b894 !important;}
+        body { font-family: 'Segoe UI', 'Microsoft JhengHei', sans-serif; line-height: 1.6; max-width: 900px; margin: 0 auto; padding: 20px; background-color: #f0f2f5; color: #1c1e21; }
+        .card { background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.1); margin-bottom: 25px; }
+        h1 { color: #1877f2; text-align: center; font-size: 2em; margin-bottom: 30px; }
+        h2 { border-left: 5px solid #1877f2; padding-left: 15px; margin-top: 30px; font-size: 1.3em; }
         
-        /* AI 按鈕專屬樣式 */
-        .ai-btn { background-color: #9b59b6; margin-top: 10px; padding: 8px 15px; font-size: 15px; width: auto; display: inline-block; border-radius: 20px;}
-        .ai-btn:hover { background-color: #8e44ad; }
+        .mode-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 30px; }
+        .mode-btn { padding: 15px; border: 2px solid #ddd; border-radius: 10px; cursor: pointer; text-align: center; font-weight: bold; background: #fff; transition: 0.3s; }
+        .mode-btn.active { border-color: #1877f2; background: #e7f3ff; color: #1877f2; }
+
+        .preset-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-top: 15px; }
+        .preset-card { padding: 15px; background: #f8f9fa; border-radius: 8px; border: 1px solid #eee; cursor: pointer; transition: 0.2s; }
+        .preset-card:hover { background: #edf2f7; border-color: #cbd5e0; }
+        .preset-card h3 { margin: 0 0 10px 0; font-size: 1.1em; color: #2d3748; }
+        .preset-card p { margin: 0; font-size: 0.9em; color: #718096; }
+
+        .chapter-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; margin-top: 15px; }
+        .settings-block { display: flex; justify-content: center; gap: 20px; background: #f0f7ff; padding: 20px; border-radius: 10px; margin: 20px 0; }
+        
+        button.start-btn { background-color: #1877f2; color: white; border: none; padding: 15px 30px; font-size: 1.2em; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; margin-top: 20px; }
+        .question-block { margin-bottom: 30px; padding: 20px; border: 1px solid #e2e8f0; border-radius: 10px; }
+        .options label { display: block; margin-bottom: 10px; padding: 12px; border-radius: 6px; background: #f8f9fa; border: 1px solid #edf2f7; cursor: pointer; }
+        .correct-answer { margin-top: 15px; padding: 15px; background: #fffaf0; border-left: 5px solid #ed8936; display: none; }
+        .ai-btn { background: #805ad5; color: white; border: none; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 0.9em; margin-top: 10px; }
         
         #quiz-container, #result-container { display: none; }
     </style>
 </head>
 <body>
 
-    <h1>📝 政府採購法 隨堂測驗</h1>
+    <h1>🏛️ 採購法專業模擬考系統</h1>
 
     <div id="setup-container" class="card">
-        <h2>1. 請選擇測驗章節</h2>
-        <div id="chapter-checkboxes" class="chapter-list"></div>
-        
-        <h2>2. 請設定測驗題數</h2>
-        <div class="settings-block">
-            <label>選擇題：<input type="number" id="mcq-count" value="30" min="0" max="500"> 題</label>
-            <label>是非題：<input type="number" id="tf-count" value="20" min="0" max="500"> 題</label>
+        <div class="mode-selector">
+            <div class="mode-btn active" id="mode-preset" onclick="switchMode('preset')">🎯 模擬考配分模式</div>
+            <div class="mode-btn" id="mode-free" onclick="switchMode('free')">🛠️ 自由練習模式</div>
         </div>
 
-        <button onclick="startQuiz()">🚀 開始測驗</button>
+        <div id="section-preset">
+            <h2>請選擇考試類別（依官方配分）</h2>
+            <div class="preset-grid">
+                <div class="preset-card" onclick="startPreset('total')">
+                    <h3>📚 1. 總論及法規課程</h3>
+                    <p>全生命週期(5題) / 總則招標決標(17題) / 罰則(3題)</p>
+                    <p><strong>共 15 選擇 + 10 是非</strong></p>
+                </div>
+                <div class="preset-card" onclick="startPreset('practical')">
+                    <h3>🏗️ 2. 實務課程</h3>
+                    <p>技術服務 / 財物勞務 / 最有利標 / 電子實務 / 履約驗收</p>
+                    <p><strong>共 15 選擇 + 10 是非</strong></p>
+                </div>
+                <div class="preset-card" onclick="startPreset('others')">
+                    <h3>⚖️ 3. 其他課程</h3>
+                    <p>錯誤態樣 / 文件製作 / 契約 / 底價分析 / 爭議處理 / 道德</p>
+                    <p><strong>共 10 選擇 + 10 是非</strong></p>
+                </div>
+                <div class="preset-card" style="border-color: #1877f2; background: #f0f7ff;" onclick="startPreset('full')">
+                    <h3>🎓 全科目大會考</h3>
+                    <p>包含上述所有章節之綜合模擬考</p>
+                    <p><strong>共 40 選擇 + 30 是非</strong></p>
+                </div>
+            </div>
+        </div>
+
+        <div id="section-free" style="display:none;">
+            <h2>選擇自訂章節</h2>
+            <div id="chapter-checkboxes" class="chapter-list"></div>
+            <h2>設定自訂題數</h2>
+            <div class="settings-block">
+                <label>選擇題：<input type="number" id="mcq-count" value="30" style="width:60px"> 題</label>
+                <label>是非題：<input type="number" id="tf-count" value="20" style="width:60px"> 題</label>
+            </div>
+            <button class="start-btn" onclick="startFreeQuiz()">🚀 開始自訂測驗</button>
+        </div>
     </div>
 
     <div id="quiz-container" class="card">
-        <h2 id="quiz-title">測驗進行中</h2>
+        <h2 id="quiz-title">正在進行模擬考...</h2>
         <div id="questions-area"></div>
-        <button onclick="submitQuiz()">✅ 提交答案並看解析</button>
+        <button class="start-btn" onclick="submitQuiz()">✅ 提交答案並檢討</button>
     </div>
 
     <div id="result-container" class="card">
-        <h2>測驗結果</h2>
-        <h3 id="score-display" style="text-align: center; color: #e74c3c; font-size: 1.5em;"></h3>
-        <button onclick="location.reload()" style="margin-bottom: 20px;">🔄 重新測驗</button>
+        <h2 style="text-align:center">測驗結果</h2>
+        <div id="score-display" style="text-align:center; font-size:2em; color:#1877f2; margin:20px 0;"></div>
+        <button class="start-btn" onclick="location.reload()">🔄 回到主選單</button>
     </div>
 <script>
 const quizData = {
@@ -23617,155 +23651,125 @@ const quizData = {
         ]
     }
 };
-            let currentQuestions = [];
+const config = {
+            'total': [
+                { name: '政府採購全生命週期概論', mcq: 3, tf: 2 },
+                { name: '政府採購法之總則、招標及決標', mcq: 10, tf: 7 },
+                { name: '政府採購法之罰則及附則', mcq: 2, tf: 1 }
+            ],
+            'practical': [
+                { name: '工程及技術服務採購作業', mcq: 3, tf: 2 },
+                { name: '財物及勞務採購作業', mcq: 3, tf: 2 },
+                { name: '最有利標及評選優勝廠商', mcq: 3, tf: 2 },
+                { name: '電子採購實務', mcq: 1, tf: 1 },
+                { name: '政府採購法之履約管理及驗收', mcq: 5, tf: 3 }
+            ],
+            'others': [
+                { name: '錯誤採購態樣', mcq: 1, tf: 1 },
+                { name: '投標須知及招標文件製作', mcq: 2, tf: 2 },
+                { name: '採購契約', mcq: 2, tf: 2 },
+                { name: '底價及價格分析', mcq: 2, tf: 2 },
+                { name: '政府採購法之爭議處理', mcq: 2, tf: 1 },
+                { name: '道德規範及違法處置', mcq: 1, tf: 2 }
+            ]
+        };
+
+        let currentQuestions = [];
+
+        function switchMode(mode) {
+            document.getElementById('section-preset').style.display = mode === 'preset' ? 'block' : 'none';
+            document.getElementById('section-free').style.display = mode === 'free' ? 'block' : 'none';
+            document.getElementById('mode-preset').classList.toggle('active', mode === 'preset');
+            document.getElementById('mode-free').classList.toggle('active', mode === 'free');
+        }
 
         window.onload = function() {
-            if (typeof quizData === 'undefined') {
-                document.getElementById('chapter-checkboxes').innerHTML = '<p style="color:red; font-weight:bold;">⚠️ 請先將 data.js 的內容貼入 HTML 檔案中！</p>';
-                return;
-            }
-
-            const chapterDiv = document.getElementById('chapter-checkboxes');
-            for (let chapter in quizData) {
-                let label = document.createElement('label');
-                label.innerHTML = `<input type="checkbox" value="${chapter}" checked> ${chapter}`;
-                chapterDiv.appendChild(label);
+            if (typeof quizData === 'undefined') return;
+            const container = document.getElementById('chapter-checkboxes');
+            for (let ch in quizData) {
+                container.innerHTML += `<label style="display:block; padding:5px;"><input type="checkbox" value="${ch}" checked> ${ch}</label>`;
             }
         };
 
-        function getRandomItems(arr, count) {
-            let shuffled = [...arr].sort(() => 0.5 - Math.random());
-            return shuffled.slice(0, count);
-        }
-
-        function startQuiz() {
-            if (typeof quizData === 'undefined') {
-                alert("請先將題庫資料貼入程式碼中！");
-                return;
+        function startPreset(type) {
+            let chaptersToPick = [];
+            if (type === 'full') {
+                chaptersToPick = [...config.total, ...config.practical, ...config.others];
+            } else {
+                chaptersToPick = config[type];
             }
-
-            let selectedChapters = [];
-            document.querySelectorAll('#chapter-checkboxes input:checked').forEach(cb => selectedChapters.push(cb.value));
-
-            if (selectedChapters.length === 0) {
-                alert("請至少選擇一個章節！");
-                return;
-            }
-
-            let numMCQ = parseInt(document.getElementById('mcq-count').value) || 0;
-            let numTF = parseInt(document.getElementById('tf-count').value) || 0;
-
-            if (numMCQ === 0 && numTF === 0) {
-                alert("選擇題和是非題不能都為 0 題喔！");
-                return;
-            }
-
-            let poolMCQ = [];
-            let poolTF = [];
-
-            selectedChapters.forEach(ch => {
-                if(quizData[ch]) {
-                    poolMCQ = poolMCQ.concat(quizData[ch].mcq || []);
-                    poolTF = poolTF.concat(quizData[ch].tf || []);
+            
+            let finalSelection = [];
+            chaptersToPick.forEach(target => {
+                const source = quizData[target.name];
+                if (source) {
+                    finalSelection.push(...pickRandom(source.mcq, target.mcq, 'mcq'));
+                    finalSelection.push(...pickRandom(source.tf, target.tf, 'tf'));
                 }
             });
 
-            if (numMCQ > poolMCQ.length) { numMCQ = poolMCQ.length; }
-            if (numTF > poolTF.length) { numTF = poolTF.length; }
+            launchQuiz(finalSelection);
+        }
 
-            let selectedMCQ = getRandomItems(poolMCQ, numMCQ).map(q => ({...q, type: 'mcq'}));
-            let selectedTF = getRandomItems(poolTF, numTF).map(q => ({...q, type: 'tf'}));
-            
-            currentQuestions = [...selectedMCQ, ...selectedTF].sort(() => 0.5 - Math.random());
+        function pickRandom(arr, count, type) {
+            if (!arr) return [];
+            let shuffled = [...arr].sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, count).map(q => ({...q, type}));
+        }
 
-            if (currentQuestions.length === 0) {
-                alert("所選章節中沒有題目！");
-                return;
-            }
-
-            renderQuestions();
+        function launchQuiz(questions) {
+            currentQuestions = questions.sort(() => 0.5 - Math.random());
             document.getElementById('setup-container').style.display = 'none';
             document.getElementById('quiz-container').style.display = 'block';
-            window.scrollTo(0, 0);
+            renderQuestions();
+            window.scrollTo(0,0);
         }
 
+        // --- 以下為原本的渲染與解析功能，保持不變 ---
         function renderQuestions() {
             const area = document.getElementById('questions-area');
-            area.innerHTML = '';
-
-            currentQuestions.forEach((q, index) => {
-                let html = `<div class="question-block" id="q-block-${index}">
-                                <div class="question-title">${index + 1}. [${q.type === 'mcq' ? '選擇' : '是非'}] ${q.question}</div>
-                                <div class="options">`;
-                
-                if (q.type === 'mcq') {
-                    q.options.forEach((opt, i) => {
-                        html += `<label><input type="radio" name="q${index}" value="${i + 1}"> (${i + 1}) ${opt}</label>`;
-                    });
-                } else {
-                    html += `<label><input type="radio" name="q${index}" value="O"> (O) 是</label>
-                             <label><input type="radio" name="q${index}" value="X"> (X) 非</label>`;
-                }
-
-                // 加入 AI 解析按鈕
-                html += `</div>
-                         <div class="correct-answer" id="ans-${index}">
-                            正確答案：${q.answer}<br>
-                            <button class="ai-btn" onclick="copyToAI(${index})">🤖 複製此題，呼叫 AI 解析</button>
-                         </div>
-                         </div>`;
-                area.innerHTML += html;
-            });
+            area.innerHTML = currentQuestions.map((q, i) => `
+                <div class="question-block" id="q-block-${i}">
+                    <div style="font-weight:bold; margin-bottom:10px;">${i+1}. [${q.type==='mcq'?'選擇':'是非'}] ${q.question}</div>
+                    <div class="options">
+                        ${q.type==='mcq' 
+                            ? q.options.map((opt, oi) => `<label><input type="radio" name="q${i}" value="${oi+1}"> (${oi+1}) ${opt}</label>`).join('')
+                            : `<label><input type="radio" name="q${i}" value="O"> (O) 是</label><label><input type="radio" name="q${i}" value="X"> (X) 否</label>`
+                        }
+                    </div>
+                    <div class="correct-answer" id="ans-${i}">
+                        正確答案：${q.answer} <br>
+                        <button class="ai-btn" onclick="copyToAI(${i})">🤖 複製此題呼叫 AI 解析</button>
+                    </div>
+                </div>
+            `).join('');
         }
 
         function submitQuiz() {
-            let correctCount = 0;
-
-            currentQuestions.forEach((q, index) => {
-                let selected = document.querySelector(`input[name="q${index}"]:checked`);
-                let ansDiv = document.getElementById(`ans-${index}`);
-                let qBlock = document.getElementById(`q-block-${index}`);
-                
-                ansDiv.style.display = 'block';
-                let standardizedAns = q.answer.toUpperCase().replace('Ｘ', 'X');
-
-                if (selected) {
-                    if (selected.value === q.answer || selected.value === standardizedAns) {
-                        correctCount++;
-                        qBlock.classList.add('correct-bg');
-                    } else {
-                        qBlock.classList.add('wrong-bg');
-                    }
+            let score = 0;
+            currentQuestions.forEach((q, i) => {
+                const selected = document.querySelector(`input[name="q${i}"]:checked`);
+                const block = document.getElementById(`q-block-${i}`);
+                document.getElementById(`ans-${i}`).style.display = 'block';
+                if (selected && (selected.value === q.answer || selected.value === q.answer.replace('Ｘ','X'))) {
+                    score++;
+                    block.style.borderColor = '#48bb78';
                 } else {
-                    qBlock.classList.add('wrong-bg');
+                    block.style.borderColor = '#f56565';
                 }
-                
-                document.querySelectorAll(`input[name="q${index}"]`).forEach(input => input.disabled = true);
             });
-
             document.getElementById('quiz-container').style.display = 'none';
             document.getElementById('result-container').style.display = 'block';
-            document.getElementById('score-display').innerText = `您的得分：${correctCount} / ${currentQuestions.length} 題\n（正確率：${Math.round(correctCount/currentQuestions.length*100)}%）`;
-            
+            document.getElementById('score-display').innerText = `得分：${score} / ${currentQuestions.length}`;
             document.getElementById('result-container').insertBefore(document.getElementById('questions-area'), document.getElementById('result-container').lastElementChild);
-            window.scrollTo(0, 0);
+            window.scrollTo(0,0);
         }
 
-        // 複製給 AI 的專屬咒語功能
-        function copyToAI(index) {
-            let q = currentQuestions[index];
-            let typeText = q.type === 'mcq' ? '選擇題' : '是非題';
-            let optionsText = q.type === 'mcq' ? q.options.map((o, i) => `(${i+1}) ${o}`).join("  ") : "(O) 是 / (X) 非";
-            
-            let prompt = `請幫我解析這題【政府採購法】${typeText}：\n\n題目：${q.question}\n選項：${optionsText}\n正確答案：${q.answer}\n\n請告訴我為什麼選這個答案，以及相關的法條依據。`;
-
-            // 嘗試複製到剪貼簿
-            navigator.clipboard.writeText(prompt).then(() => {
-                alert("✅ 已經為您複製好題目與答案！\n\n請直接切換到 AI 對話框，貼上並發送，我就會為您解答喔！");
-            }).catch(err => {
-                alert("複製失敗，可能是瀏覽器限制。請手動框選題目文字來問我喔！");
-            });
+        function copyToAI(i) {
+            const q = currentQuestions[i];
+            const text = `請幫我解析採購法題目：\n題目：${q.question}\n答案：${q.answer}`;
+            navigator.clipboard.writeText(text).then(() => alert('已複製題目，請貼給 AI 解析！'));
         }
     </script>
 </body>
-</html>        
+</html>
